@@ -12,3 +12,6 @@ Also assumption einsteinium-cli is installed and available at /home/user/einstei
 
 For the alert to works, create a telegram bot. Rename telegram_info.txt.sample to telegram_info.txt
 Alternatively you can email through mailgun, or start an emergency conference call through twilio
+
+
+![EMC2 51 Alert Bot](https://raw.githubusercontent.com/imylomylo/emc2-51-attack-alert/master/emc2-51-attack-telegram-alert.png)
