@@ -1,0 +1,8 @@
+#!/bin/bash
+TELEGRAM_BOT_TOKEN=""
+TELEGRAM_BOT_USERNAME=""
+TELEGRAM_BOT_CHATID=""
+# TO GET CHATID
+# After creating your bot, and starting a chat with /start
+# Send it a message, wait a minute then 
+# curl or browser: https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/getUpdates
