@@ -1,6 +1,18 @@
 #!/bin/bash
 TELEGRAMDIR=/home/user/bin/telegram
 WORKDIR=/home/user/contrib/emc2
+# CHECK IF RECENT SEND THEN EXIT
+PREVIOUS=`cat ${WORKDIR}/lastsent`
+NOW=`date +%s`
+SENDTHRESHOLD=300
+echo "Previous: ${PREVIOUS}"
+echo "NOW: ${NOW}"
+echo "Threshold (s): ${SENDTHRESHOLD}"
+if (( $(echo "${NOW} - ${PREVIOUS} <  ${SENDTHRESHOLD}" | bc -l) ))
+	then
+	echo "Less than 300 seconds...exiting"
+	exit
+fi
 # LATEST RECORDS
 LAST10min=$(tail -n 1 ${WORKDIR}/emc2.networkhashps.10min.log | cut -d . -f 1)
 LATEST=$(tail -n 1 ${WORKDIR}/emc2.networkhashps.1min.log | cut -d . -f 1)
@@ -76,6 +88,12 @@ ${ghLATEST} GHash
 "
 echo ${MSG}
 
+# TEST IF LESS THAN 1% CHANGE EXAMPLE
+#if (( $(echo "${PERCENT10} <  1" | bc -l) ))
+#then
+#        echo "Less than 1%"
+#fi
+
 # RULE FOR SENDING ANY INCREASE SINCE LAST 10 MINS
 if (( ${LATEST}*100/${LAST10min}-100 > 10 | bc -l )) \
 || (( ${LATEST}*100/${MINSAGO20}-100 > 10 | bc -l )) \
@@ -90,6 +108,8 @@ if (( ${LATEST}*100/${LAST10min}-100 > 10 | bc -l )) \
 || (( ${LATEST}*100/${MINSAGO110}-100 > 15 | bc -l )) \
 || (( ${LATEST}*100/${MINSAGO120}-100 > 15 | bc -l )) 
 then 
-${TELEGRAMDIR}/telegram_send.sh  "${MSG}"
+	LASTSENT=`date +%s`
+	${TELEGRAMDIR}/telegram_send.sh  "${MSG}"
+	echo ${LASTSENT} > ${WORKDIR}/lastsent
 fi
 exit
